@@ -30,21 +30,6 @@ plt.rcParams['axes.unicode_minus'] = False  # 正常显示负号
 plt.rcParams['font.size'] = 12  # 全局默认字体大小
 
 
-# def sim_u_u(matrix_raw):  # 计算u与s相似度, 公式为sim_{us}
-#     average_user_rating = np.round(np.nanmean(matrix_raw, axis=1), 8) + 1e-10  # 取出每行非零值求mean,添加一个极小值防止sign时出现0
-#     matrix_diff = matrix_raw - np.tile(average_user_rating.reshape(-1, 1), (1, matrix_raw.shape[1]))  # 均分矩阵-原矩阵
-#     matrix_diff_sign = np.sign(matrix_diff)  # 符号函数来判断是否positive还是negative
-#     matrix_diff_sign = np.nan_to_num(matrix_diff_sign)  # 这里把nan值填充为0，因为之后的矩阵相乘时不会影响结果
-#     matrix_sim_1 = matrix_diff_sign @ matrix_diff_sign.T  # sign负号直接相乘，此时等到的结果是sum(相同) - sum(不同的)
-#     matrix_sim_abs = np.abs(matrix_diff_sign) @ np.abs(matrix_diff_sign).T  # abs后直接相乘，此时等到的结果是sum(相同) + sum(不同的)
-#     matrix_sim_sum = matrix_sim_1 + (matrix_sim_abs - matrix_sim_1) / 2  # 此时可以用此方法仅留下相同的
-#     # matrix_count=0时说明两个user之间没有相同的评分item，因此需要进行处理，因其分子必为0，只需要将分母改成!=0即可
-#     matrix_sim_count = np.where(matrix_sim_abs == 0, 1, matrix_sim_abs)
-#     matrix_sim = matrix_sim_sum / matrix_sim_count
-#     np.fill_diagonal(matrix_sim, 0)  # 将对角线元素（自身相似度）置为0
-#     return matrix_sim
-
-
 def sim_u_u_sparse(sparse_matrix_raw):  # 计算u与s相似度, 公式为sim_{us}
     average_user_rating = np.round(sparse_matrix_raw.sum(axis=1).A1 / np.diff(sparse_matrix_raw.indptr), 8) + 1e-10  # 取出每行非零值求mean,添加一个极小值防止sign时出现0
     average_data = np.repeat(average_user_rating, np.diff(sparse_matrix_raw.indptr))
@@ -62,18 +47,6 @@ def sim_u_u_sparse(sparse_matrix_raw):  # 计算u与s相似度, 公式为sim_{us
     np.fill_diagonal(matrix_sim, 0)  # 将对角线元素（自身相似度）置为0
     matrix_sim = csr_matrix(matrix_sim)
     return matrix_sim
-
-
-# def sim_u_v(matrix_raw, matrix_similarity):  # 计算u与v的邻居的相似度平均值
-#     matrix_rating_mask = np.where(~np.isnan(matrix_raw), 1, 0)  # 将df矩阵中的非nan值全部变成1，方便矩阵直接相乘即相加
-#     matrix_similarity_mask = np.ones(matrix_similarity.shape)  # 将相似矩阵中的值全部变成1，方便矩阵直接相乘即相加
-#     np.fill_diagonal(matrix_similarity_mask, 0)
-#     matrix_u_v_sum = matrix_similarity @ matrix_rating_mask  # 两个矩阵相乘，0值说明user与item的所有邻居的相似度都是0
-#     matrix_u_v_count = matrix_similarity_mask @ matrix_rating_mask
-#     # matrix_u_v_count=0时说明user与item所有邻居相似度都是0，因此其分子也是0，只需要将分母改成!=0即
-#     matrix_u_v_count = np.where(matrix_u_v_count == 0, 1, matrix_u_v_count)
-#     matrix_u_v = matrix_u_v_sum / matrix_u_v_count
-#     return matrix_u_v
 
 
 def sim_u_v_sparse(sparse_matrix_raw, matrix_similarity):  # 计算u与v的邻居的相似度平均值
