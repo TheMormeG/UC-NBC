@@ -1,5 +1,3 @@
-以下是一个符合你描述的 `README.md` 示例：
-
 ```markdown
 # User Category-aware Naive Bayes Classifier
 
@@ -16,5 +14,3 @@ In future versions, we plan to include an object-oriented Python implementation 
 
 Feel free to use and modify this code, and stay tuned for future updates!
 ```
-
-你可以根据文件名和具体描述进一步修改这个 `README.md` 文件内容。
