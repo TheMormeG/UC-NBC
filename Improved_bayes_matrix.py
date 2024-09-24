@@ -22,7 +22,7 @@ warnings.filterwarnings('ignore')  # 忽略警告
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-d', '--dataset_name', default='ciao', help='dataset name: ciao/movielens_100k/movielens_1m')
-parser.add_argument('-f', '--five_fold', default=False, help='whether to use 5-fold cross-validation')
+parser.add_argument('-f', '--five_folds', default=False, help='whether to use 5-fold cross-validation')
 args = parser.parse_args()
 
 font_path = r'C:\Windows\Fonts\simsun.ttc'
@@ -367,7 +367,7 @@ for train_index, test_index in kf.split(df_rating):
 
     k += 1
     print(f"Fold {k}，UC-NBC MAE：{df_err_improved_mae:.4f}, NBC MAE：{df_err_orig_mae:.4f}")
-    if args.five_fold:
+    if args.five_folds:
         continue
     else:
         break
