@@ -1,11 +1,13 @@
-```markdown
+
 # User Category-aware Naive Bayes Classifier
 
 This repository contains an implementation of a User Category-aware Naive Bayes Classifier.
 It includes two Python scripts:
 
-- Improved_bayes_matrix: A simple Python implementation used to check the final results of the classifier.
-- Improved_bayes_plot: A script for visualizing the illustrations from the related paper.
+- Improved_bayes_matrix: 
+  A simple Python implementation used to check the final results of the classifier.
+- Improved_bayes_plot: 
+  A script for visualizing the illustrations from the related paper.
 
 ### Current Version
 The current version is a basic implementation without any object-oriented structure.
@@ -15,7 +17,7 @@ It is a straightforward, functional implementation meant for initial exploration
 In future versions, we plan to include an object-oriented Python implementation
 to enhance the modularity and reusability of the code.
 
-```
+
 ### Usage
 
 1. Install required packages from requirements.txt file.
