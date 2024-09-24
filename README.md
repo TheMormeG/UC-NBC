@@ -15,5 +15,17 @@ It is a straightforward, functional implementation meant for initial exploration
 In future versions, we plan to include an object-oriented Python implementation
 to enhance the modularity and reusability of the code.
 
+### Usage
+
+1. Install required packages from requirements.txt file.
+```bash
+pip install -r requirements.txt
+```
+
+2. Run Improved_bayes_matrix.py file to obtain the mae. You can configure some training parameters through the command line.
+```bash
+python Improved_bayes_matrix.py -d ciao/movielens_100k --five_folds True/False
+```
+
 Feel free to use and modify this code, and stay tuned for future updates!
 ```

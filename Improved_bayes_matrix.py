@@ -15,7 +15,6 @@ from sklearn.model_selection import KFold
 import warnings
 from scipy.sparse import csr_matrix
 import itertools
-import itertools
 from sklearn.model_selection import train_test_split
 from matplotlib.font_manager import FontProperties
 import argparse
