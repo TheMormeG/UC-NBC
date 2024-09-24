@@ -18,12 +18,16 @@ import itertools
 import itertools
 from sklearn.model_selection import train_test_split
 from matplotlib.font_manager import FontProperties
-
+import argparse
 warnings.filterwarnings('ignore')  # 忽略警告
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-d', '--dataset_name', default='ciao', help='dataset name: ciao/movielens_100k/movielens_1m')
+parser.add_argument('-f', '--five_fold', default=False, help='whether to use 5-fold cross-validation')
+args = parser.parse_args()
 
 font_path = r'C:\Windows\Fonts\simsun.ttc'
 chinese_font = FontProperties(fname=font_path, size=16)
-
 plt.rcParams['font.family'] = 'serif'
 plt.rcParams['font.serif'] = ['Times New Roman']  # 英文字体
 plt.rcParams['axes.unicode_minus'] = False  # 正常显示负号
@@ -116,13 +120,13 @@ def classify_user(avg_rating, var_rating):
 
 start_time = time.time()  # 开始计时
 progress_print('程序开始运行')
-dataset_name = 'movielens_100k'  # 选择数据集 movielens_100k、ciao、movielens_1m
+dataset_name = args.dataset_name  # 选择数据集 movielens_100k、ciao、movielens_1m
 if dataset_name == 'movielens_100k':
-    df = pd.read_csv(r'.\UC-NBC\movielens-100k\u.data', sep='\t', header=None, names=['user_id', 'item_id', 'rating', 'timestamp'])
+    df = pd.read_csv(r'.\movielens-100k\u.data', sep='\t', header=None, names=['user_id', 'item_id', 'rating', 'timestamp'])
 elif dataset_name == 'movielens_1m':
-    df = pd.read_csv(r'.\UC-NBC\movielens-1m\ratings.dat', sep='::', engine='python', header=None, names=['user_id', 'item_id', 'rating', 'timestamp'])
+    df = pd.read_csv(r'.\movielens-1m\ratings.dat', sep='::', engine='python', header=None, names=['user_id', 'item_id', 'rating', 'timestamp'])
 elif dataset_name == 'ciao':
-    data = loadmat(r'.\UC-NBC\ciao_rating.mat')
+    data = loadmat(r'.\ciao_rating.mat')
     df = pd.DataFrame(data['rating'], columns=['user_id', 'item_id', 'cat_id', 'rating', 'helpfulness'])
     df = df[df['rating'] > 0]  # 剔除 rating 为 0 的情况
 else:
@@ -150,7 +154,7 @@ var_list = [0, 1.5, 3.5, 5]
 kf = KFold(n_splits=5, shuffle=True, random_state=42)  # 5折交叉验证
 k = 1
 lam = 0.1 if dataset_name == 'ciao' else 0.66  # 正则化系数
-mae_each_fold = {'NB': [], 'INB': []}
+mae_each_fold = {'NBC': [], 'UC-NBC': []}
 for train_index, test_index in kf.split(df_rating):
     train_df = df_rating.iloc[train_index]  # 训练集
     test_df = df_rating.iloc[test_index]  # 测试集
@@ -359,11 +363,15 @@ for train_index, test_index in kf.split(df_rating):
     df_err_improved_mae = round(df_err_improved.mean()[0], 4)
     df_err_orig_mae = round(df_err_orig.mean()[0], 4)
 
-    mae_each_fold['NB'].append(df_err_orig_mae)
-    mae_each_fold['INB'].append(df_err_improved_mae)
+    mae_each_fold['NBC'].append(df_err_orig_mae)
+    mae_each_fold['UC-NBC'].append(df_err_improved_mae)
 
     k += 1
-    break
+    print(f"Fold {k}，UC-NBC MAE：{df_err_improved_mae:.4f}, NBC MAE：{df_err_orig_mae:.4f}")
+    if args.five_fold:
+        continue
+    else:
+        break
 
 progress_print(f"程序运行完毕，总耗时{time.time() - start_time:.2f}秒")
 
